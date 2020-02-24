@@ -59,16 +59,16 @@ class _UpdatePageState extends State<UpdatePage> {
           backgroundColor: Color.fromRGBO(48, 48, 48, 1),
           elevation: 0,
         ),
-        body: buildBody(),
+        body: buildBody(breakdowns),
       ),
     );
   }
 
-  buildBody() {
+  buildBody(Breakdowns breakdowns) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
-        children: <Widget>[radio(), inputCost(), inputCategory(), Buttons()],
+        children: <Widget>[radio(), inputCost(), inputCategory(), Buttons(breakdowns)],
       ),
     );
   }
@@ -124,7 +124,7 @@ class _UpdatePageState extends State<UpdatePage> {
     );
   }
 
-  Buttons() {
+  Buttons(Breakdowns breakdowns) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -140,14 +140,14 @@ class _UpdatePageState extends State<UpdatePage> {
         RaisedButton(
           child: Text("완료"),
           onPressed: () {
-            onUpdate();
+            onUpdate(breakdowns);
           },
         )
       ],
     );
   }
 
-  onUpdate() {
+  onUpdate(Breakdowns breakdowns) {
     if (costController.text == '') {
       final snackBar = SnackBar(
         content: Text('금액을 입력하세요'),
@@ -167,6 +167,7 @@ class _UpdatePageState extends State<UpdatePage> {
     breakdown.category = categoryController.text;
     print(breakdown.toMap().toString());
     DBHelper.db.updateBreakdownInDB(breakdown);
+    breakdowns.getFromDB();
     Navigator.pop(context);
   }
 
